@@ -2,9 +2,9 @@
 
 In this repository, we provide the code for the function and simulation study of the paper <a href=https://arxiv.org/abs/2302.11656>_"Confounder-Dependent Bayesian Mixture Model: Characterizing Heterogeneity of Causal Effects in Air Pollution Epidemiology"_ </a> by D. Zorzetto, F.J. Bargagli-Stoffi, A. Canale, and F. Dominici (2023). 
 
-## Code files
+## Code files:
 
-# general functions
+### general functions
  - "0_functions_simulations.R":
     functions to simulate different settings
  - "0_model_CDBMM.R":
@@ -15,7 +15,7 @@ In this repository, we provide the code for the function and simulation study of
  - "0_plots_simulations.R":
     functions to visualize the simulated data
 
-# reproduce the results in Simulation Study Section
+### reproduce the results in Simulation Study Section
  - "1_generating_data_simulations.R":
    generate the seven different settings
  - "2_estimation_models.R":
