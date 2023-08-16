@@ -10,23 +10,11 @@ library(truncnorm)
 library(invgamma)
 library(BNPmix)
 
-# load simulated data
-load("simulazione_paper_2.RData")
-
-# iterations
-R=5000
-R_burnin=2000
-
-# number of maximum groups for the two treatment levels
-L_0=15
-L_1=15
-
-
 #########################################################################
 #    ---  Confonder-Dependent Bayesian Mixture Model    ----
 #########################################################################
 
-PSB_var<-function(c,data_sample){
+CDBMM_Gibbs<-function(c,data_sample,n){
   
   # set seed for riproducibility
   set.seed(c)
@@ -34,10 +22,10 @@ PSB_var<-function(c,data_sample){
   # ------   prearing variables   ------
   
   # main variables
-  T_level=data_sample[[c]]$data$T             # treatment
-  X=data_sample[[c]]$data$TX                  # covariates-confounders
-  Y_obs=unlist(sapply(1:n, function(i)        # observed outcome
-    data_sample[[c]]$data$Y[(T_level+1),i]))
+  T_level=data_sample[[c]]$data$T                # treatment
+  X=data_sample[[c]]$data$X                      # covariates-confounders
+  Y_obs=unlist(sapply(1:n, function(i)           # observed outcome
+    data_sample[[c]]$data$Y[(T_level[i]+1),i]))
   
   # number covariates (X)
   n_X=dim(X)[2]+1
@@ -71,8 +59,10 @@ PSB_var<-function(c,data_sample){
   
   # ------   useful quantities   ------   
   # number of units in each cluster
-  units_for_clusters_0=table(xi_0)
-  units_for_clusters_1=table(xi_1)
+  units_for_clusters_0=rep(0,L_0)
+  units_for_clusters_0[as.numeric(names(table(xi_0)))]=table(xi_0)
+  units_for_clusters_1=rep(0,L_1)
+  units_for_clusters_1[as.numeric(names(table(xi_1)))]=table(xi_1)
   # eta corresponding to each unit
   eta_sogg_0=eta_0[xi_0]
   eta_sogg_1=eta_1[xi_1]
@@ -105,63 +95,59 @@ PSB_var<-function(c,data_sample){
     return(clusters)
   }
   
-  # funtion to impute missing outcomes
-  posterior_estimation_ymis<-function(partizione){
+  # funtion to impute outcomes
+  posterior_atoms<-function(partition_iterations){
     
     # create empty list
-    stime=list(stime_0=rep(NA,max(partizione[,1])),
-               stime_1=rep(NA,max(partizione[,2])))
+    p=list(p_0=rep(NA,max(partition_iterations[,1])),
+           p_1=rep(NA,max(partition_iterations[,2])))
     
-    # imputing missing outcome
-    for (g in 1:max(partizione[,1])){
-      unita=intersect(T0,which(partizione[,1]==g))
-      stime$stime_0[g]=mean(sapply(1:length(unita), function(x) 
+    # estimating clusters mean
+    for (g in 1:max(partition_iterations[,1])){
+      units=intersect(T0,which(partition_iterations[,1]==g))
+      p$p_0[g]=mean(sapply(1:length(units), function(x) 
         mean(sapply(1:(R-R_burnin), function(j) 
-          post_eta[cluster_allocation_0[unita[x],j],R_burnin+j]))))
+          post_eta[cluster_allocation_0[units[x],j],R_burnin+j]))))
     }
-    for (g in 1:max(partizione[,2])){
-      unita=intersect(T1,which(partizione[,2]==g))
-      stime$stime_1[g]=mean(sapply(1:length(unita), function(x) 
+    for (g in 1:max(partition_iterations[,2])){
+      units=intersect(T1,which(partition_iterations[,2]==g))
+      p$p_1[g]=mean(sapply(1:length(units), function(x) 
         mean(sapply(1:(R-R_burnin), function(j) 
-          post_eta[L_0+cluster_allocation_1[unita[x],j],R_burnin+j]))))
+          post_eta[L_0+cluster_allocation_1[units[x],j],R_burnin+j]))))
     }
     
-    y_mis_post_mean=sapply(1:n, function(x) 
-      ifelse(t[x]==0, 
-             stime$stime_1[partizione[x,2]],
-             stime$stime_0[partizione[x,1]]))
-    return(y_mis_post_mean)
+    return(p)
   }
   
   # ------   saving informations   -----
   
   # empty matrix where save all the informations for each iteration
   post_eta=matrix(NA,ncol=R,nrow=L_0+L_1)
-  post_var=matrix(NA,ncol=R,nrow=L_0+L_1)
+  #post_var=matrix(NA,ncol=R,nrow=L_0+L_1)
   cluster_allocation_0=matrix(NA,ncol=R-R_burnin,nrow=n)
   cluster_allocation_1=matrix(NA,ncol=R-R_burnin,nrow=n)
-  post_beta=matrix(NA,ncol=R, nrow=length(beta_0)+length(beta_1))
-  
+  #post_beta=matrix(NA,ncol=R, nrow=length(beta_0)+length(beta_1))
+  Y0_imp=matrix(NA,ncol=R-R_burnin,nrow=n)
+  Y1_imp=matrix(NA,ncol=R-R_burnin,nrow=n)
   
   # -----   updating parameters and variables at each itearation   -----
   
   for (r in 1:R){
     
+    #######################################################
+    # ----------- Cluster Specific Parameters  ------------
+    #######################################################
+    
     # -----   ETA: mean of normal distributions (atoms)   -----
     # eta_0 = eta for treatment level 0
-    eta_0[1]=rnorm(1,mean=1/(units_for_clusters_0[1]/sigma_0[1]+1/p_eta[2])*(sum(Y_obs_0[xi_0==1])/sigma_0[1]+p_eta[1]/p_eta[2]),
-                   sd=sqrt(1/(units_for_clusters_0[1]/sigma_0[1]+1/p_eta[2])))
-    for(l in 2:L_0){
-      eta_0[l]=rtruncnorm(1,a=eta_0[l-1],mean=1/(units_for_clusters_0[l]/sigma_0[l]+1/p_eta[2])*(sum(Y_obs_0[xi_0==l])/sigma_0[l]+p_eta[1]/p_eta[2]),
-                          sd=sqrt(1/(units_for_clusters_0[l]/sigma_0[l]+1/p_eta[2])))
-    }
+    eta_0=sapply(1:L_0,function(s) 
+      rnorm(1,mean=1/(units_for_clusters_0[s]/sigma_0[s]+1/p_eta[2])*(sum(Y_obs_0[xi_0==s])/sigma_0[s]+p_eta[1]/p_eta[2]),
+            sd=sqrt(1/(units_for_clusters_0[s]/sigma_0[s]+1/p_eta[2]))))
+    
     # eta_1 = eta for treatment level 1
-    eta_1[1]=rnorm(1,mean=1/(units_for_clusters_1[1]/sigma_1[1]+1/p_eta[2])*(sum(Y_obs_1[xi_1==1])/sigma_1[1]+p_eta[1]/p_eta[2]),
-                   sd=sqrt(1/(units_for_clusters_1[1]/sigma_1[1]+1/p_eta[2])))
-    for(l in 2:L_1){
-      eta_1[l]=rtruncnorm(1,a=eta_1[l-1],mean=1/(units_for_clusters_1[l]/sigma_1[l]+1/p_eta[2])*(sum(Y_obs_1[xi_1==l])/sigma_1[l]+p_eta[1]/p_eta[2]),
-                          sd=sqrt(1/(units_for_clusters_1[l]/sigma_1[l]+1/p_eta[2])))
-    }
+    eta_1=sapply(1:L_1,function(s) 
+      rnorm(1,mean=1/(units_for_clusters_1[s]/sigma_1[s]+1/p_eta[2])*(sum(Y_obs_1[xi_1==s])/sigma_1[s]+p_eta[1]/p_eta[2]),
+            sd=sqrt(1/(units_for_clusters_1[s]/sigma_1[s]+1/p_eta[2]))))
     
     eta_sogg_0=eta_0[xi_0]
     eta_sogg_1=eta_1[xi_1]
@@ -169,36 +155,44 @@ PSB_var<-function(c,data_sample){
     # -----   SIGMA: variance of normal distributions (atoms)   -----
     # sigma_0 = sigma for treatment level 0
     sigma_0=sapply(1:L_0, function(l) rinvgamma(1,p_sigma[1]+sum(xi_0==l)/2,
-                                                 p_sigma[2]+sum((Y_obs_0[xi_0==l]-eta_0[l])^2)/2))
+                                                p_sigma[2]+sum((Y_obs_0[xi_0==l]-eta_0[l])^2)/2))
     # sigma_1 = sigma for treatment level 1
     sigma_1=sapply(1:L_0, function(l) rinvgamma(1,p_sigma[1]+sum(xi_1==l)/2,
-                                                 p_sigma[2]+sum((Y_obs_1[xi_1==l]-eta_1[l])^2)/2))
+                                                p_sigma[2]+sum((Y_obs_1[xi_1==l]-eta_1[l])^2)/2))
     
-    #OMEGA:
-    #omega_0
+    ##############################################
+    # ----------- Cluster Allocation  ------------
+    ##############################################
+    
+    # -----   OMEGA: weights treatment-specific   -----
+    # omega_0 = omega for treatment level 0
     omega_0=sapply(1:n0, function(i) omega(X=X[T0[i],],beta=beta_0))
-    #omega_1
+    # omega_1 = omega for treatment level 1
     omega_1=sapply(1:n1, function(i) omega(X=X[T1[i],],beta=beta_1))
     
-    #Xi:
-    #Xi_0
+    # -----   LATENT VARIABLE for cluster allocation   -----
+    # xi_0 = latent variable for treatment level 0
     dmn_0=sapply(1:n0, function(i) sapply(1:L_0, function(l) dnorm(Y_obs_0[i], eta_0[l], sqrt(sigma_0[l]), log=TRUE)))+log(omega_0)
     dmn_0[which(is.nan(dmn_0))]=-100
     xi=sapply(1:n0, function(i) rmultinom(1,1,exp(dmn_0[,i])))
     xi_0=sapply(1:n0, function(i) xi[,i]%*%(1:L_0))
     units_for_clusters_0=apply(xi, 1, sum)
     
-    #Xi_1
+    # xi_1 = latent variable for treatment level 1
     dmn_1=sapply(1:n1, function(i) sapply(1:L_1, function(l) dnorm(Y_obs_1[i], eta_1[l], sqrt(sigma_1[l]), log=TRUE)))+log(omega_1)
     dmn_1[which(is.nan(dmn_1))]=-100
     xi=sapply(1:n1, function(i) rmultinom(1,1,exp(dmn_1[,i])))
     xi_1=sapply(1:n1, function(i) xi[,i]%*%(1:L_1))
     units_for_clusters_1=apply(xi, 1, sum)
     
-    # Z
-    #pesi_0=exp(dmn_0)
-    #somma_0=apply(pesi_0, 2, sum)
-    #pesi_0=t(pesi_0)/somma_0
+    
+    ###############################################
+    # ----------- Augmentation Scheme  ------------
+    ###############################################
+    
+    # -----   LATENT VARIABLE: Z for probit regression   -----
+    # Z_0 = latent variable for treatment level 0
+    # building intermediate values
     pesi_0=t(omega_0)
     mu_z=cbind((pesi_0[,1]),(pesi_0[,2]/(1-pesi_0[,1])))
     if (L_0>3){
@@ -207,7 +201,7 @@ PSB_var<-function(c,data_sample){
     mu_z[which(is.nan(mu_z))]=1
     mu_z[which(mu_z>1)]=1
     mu_z=mu_z-9.9e-15*(mu_z>(1-1e-16))
-    #Z_0:
+    # updating Z_0:
     for (i in 1:n0){
       for (l in 1:(min(xi_0[i],L_0-1))) {
         if(l>1){
@@ -225,10 +219,9 @@ PSB_var<-function(c,data_sample){
         }
       }
     }
-    #Z_1:
-    #pesi_1=exp(dmn_1)
-    #somma_1=apply(pesi_1, 2, sum)
-    #pesi_1=t(pesi_1)/somma_1
+    
+    # Z_1 = latent variable for treatment level 1
+    # building intermediate values
     pesi_1=t(omega_1)
     mu_z=cbind((pesi_1[,1]),(pesi_1[,2]/(1-pesi_1[,1])))
     if (L_1>3){
@@ -237,6 +230,7 @@ PSB_var<-function(c,data_sample){
     mu_z[which(is.nan(mu_z))]=1
     mu_z[which(mu_z>1)]=1
     mu_z=mu_z-9.9e-15*(mu_z>(1-1e-16))
+    # updating Z_1:
     for (i in 1:n1){
       for (l in 1:(min(xi_1[i],L_1-1))) {
         if(l>1){
@@ -255,49 +249,63 @@ PSB_var<-function(c,data_sample){
       }
     }
     
-    #BETA:
-    #beta_0
-    gruppi=which(units_for_clusters_0!=0)
-    if (max(gruppi)==L_0)
-      gruppi=gruppi[-length(gruppi)]
-    for (l in gruppi){
+    ########################################################
+    # ----------- Confounder-Dependent Weights  ------------
+    ########################################################
+    
+    # -----   BETA: parameters for probit regression   -----
+    # beta_0 = beta for treatment level 0
+    clusters_temp=which(units_for_clusters_0!=0)
+    if (max(clusters_temp)==L_0)
+      clusters_temp=clusters_temp[-length(clusters_temp)]
+    # updating beta_0 for cluster WITH allocated units
+    for (l in clusters_temp){
       val=which(xi_0>=l)
       z_tilde=unlist(sapply(val, function(i) Z_0[[i]][l]))
       x_tilde=cbind(rep(1,length(val)),matrix(X[T0[val],],ncol=n_X-1))
       V=solve(diag(n_X)/p_beta[2]+t(x_tilde)%*%x_tilde)
       beta_0[(l*n_X-(n_X-1)):(l*n_X)]=rmvnorm(1,V%*%(1/p_beta[2]*(diag(n_X)%*%rep(p_beta[1],n_X))+t(x_tilde)%*%z_tilde),V)[,1:n_X]
     }
-    vuoti=which(units_for_clusters_0==0)
-    if (length(vuoti)>0){
-      if (max(vuoti)==L_1)
-        vuoti=vuoti[-length(vuoti)]
+    # updating beta_0 for cluster WITHOUT allocated units
+    cluster_empty=which(units_for_clusters_0==0)
+    if (length(cluster_empty)>0){
+      if (max(cluster_empty)==L_1)
+        cluster_empty=cluster_empty[-length(cluster_empty)]
     }
-    for (l in vuoti){
+    for (l in cluster_empty){
       beta_0[(l*n_X-(n_X-1)):(l*n_X)]=rmvnorm(1,rep(p_beta[1],n_X),diag(n_X)/p_beta[2])[,1:n_X]
     }
-    #beta_1
-    gruppi=which(units_for_clusters_1!=0)
-    if (max(gruppi)==L_1)
-      gruppi=gruppi[-length(gruppi)]
-    for (l in gruppi){
+    
+    # beta_1 = beta for treatment level 1
+    clusters_temp=which(units_for_clusters_1!=0)
+    if (max(clusters_temp)==L_1)
+      clusters_temp=clusters_temp[-length(clusters_temp)]
+    # updating beta_0 for cluster WITH allocated units
+    for (l in clusters_temp){
       val=which(xi_1>=l)
       z_tilde=unlist(sapply(val, function(i) Z_1[[i]][l]))
       x_tilde=cbind(rep(1,length(val)),matrix(X[T1[val],],ncol=n_X-1))
       V=solve(diag(n_X)/p_beta[2]+t(x_tilde)%*%x_tilde)
       beta_1[(l*n_X-(n_X-1)):(l*n_X)]=rmvnorm(1,V%*%(1/p_beta[2]*(diag(n_X)%*%rep(p_beta[1],n_X))+t(x_tilde)%*%z_tilde),V)[,1:n_X]
     }
-    vuoti=which(units_for_clusters_1==0)
-    if (length(vuoti)>0){
-      if (max(vuoti)==L_1)
-        vuoti=vuoti[-length(vuoti)]
+    # updating beta_0 for cluster WITHOUT allocated units
+    cluster_empty=which(units_for_clusters_1==0)
+    if (length(cluster_empty)>0){
+      if (max(cluster_empty)==L_1)
+        cluster_empty=cluster_empty[-length(cluster_empty)]
     }
-    for (l in vuoti){
+    for (l in cluster_empty){
       beta_1[(l*n_X-(n_X-1)):(l*n_X)]=rmvnorm(1,rep(p_beta[1],n_X),diag(n_X)/p_beta[2])[,1:n_X]
     }
     
-    # -----   missing outcome   -----
+    ##############################################################
+    # ----------- imputing missing outcomes allocation -----------
+    ##############################################################
     
-    # estimate cluster allocation for eqch iteration
+    # -----   Y_MIS: missing outcome: Y(1-t)   -----
+    # here we are just imputing the cluster allocation (no the Y values)
+    
+    # estimate cluster allocation for each iteration
     if(r>R_burnin){
       
       # level t=0 observed --> level T=1 missing
@@ -314,34 +322,51 @@ PSB_var<-function(c,data_sample){
     # -----   saving information   -----
     # parameters
     post_eta[,r]=c(eta_0,eta_1)
-    post_var[,r]=c(sigma_0,sigma_1)
-    post_beta[,r]=c(beta_0,beta_1)
+    #post_var[,r]=c(sigma_0,sigma_1)
+    #post_beta[,r]=c(beta_0,beta_1)
     # cluster allocation for each iteration
     if(r>R_burnin){
       cluster_allocation_0[T0,r-R_burnin]=xi_0
       cluster_allocation_0[T1,r-R_burnin]=clusters_Ymiss_1
       cluster_allocation_1[T1,r-R_burnin]=xi_1
       cluster_allocation_1[T0,r-R_burnin]=clusters_Ymiss_0
+      
+      Y0_imp[,r-R_burnin]=rnorm(n,eta_0[cluster_allocation_0[,r-R_burnin]],
+                                sigma_0[cluster_allocation_0[,r-R_burnin]])
+      Y1_imp[,r-R_burnin]=rnorm(n,eta_1[cluster_allocation_1[,r-R_burnin]],
+                                sigma_1[cluster_allocation_1[,r-R_burnin]])
     }
     
     #
-    if (r%%500==0) print(r)
+    if (r%%500==0) print(paste0(r,"/",R," iterations"))
   }
   
+  ############################################
   # -----   point estimation partition   -----
+  ############################################
+  
   # partition: cluster allocation
   partition=estimation_partition(cluster_allocation_0,cluster_allocation_1)
-  # posterior mean for missing outcome
-  Y_mis=posterior_estimation_ymis(partition)
-
+  # posterior mean of tau=Y(1)-Y(0)
+  atoms=posterior_atoms(partition)
+  Y0_imp_median=apply(Y0_imp,1,median)
+  Y1_imp_median=apply(Y1_imp,1,median)
   
-  print(paste0("campione n ",c))
+  tau=Y1_imp_median-Y0_imp_median
+  tau_=rep(NA,n)
+  tau_[T0]=Y1_imp_median[T0]-Y_obs[T0]
+  tau_[T1]=Y_obs[T1]-Y0_imp_median[T1]
   
-  return(list(post_eta=post_eta,
-              post_var=post_var,
-              post_beta=post_beta,
-              partition=partition,
-              Y_mis=Y_mis))
+  
+  print(paste0("sample ",c, " done"))
+  
+  return(list(# remove the "#" if you want the chains of these parameters
+    #post_eta=post_eta,  
+    #post_var=post_var,
+    #post_beta=post_beta,
+    partition=partition,
+    atoms=atoms,
+    tau=tau,tau_=tau_))
 }
 
 
