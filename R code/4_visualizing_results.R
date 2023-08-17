@@ -78,7 +78,7 @@ ggplot(mse_boxplot, aes(x=cov, y=Xi, fill=Q)) +
         panel.grid.major = element_line(color = "grey",size = 0.1))+
   ylab("MSE") +
   xlab("") +
-  coord_cartesian(ylim = c(0.15, 0.65))
+  coord_cartesian(ylim = c(0.25, 1.2))
 dev.off()
 
 
