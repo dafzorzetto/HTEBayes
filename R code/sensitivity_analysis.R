@@ -10,6 +10,13 @@ library(parallel)
 library(truncnorm)
 library(invgamma)
 library(BNPmix)
+library(mcclust)
+library(xtable)
+library(ggplot2)
+library(dplyr)
+library(forcats)
+library(hrbrthemes)
+library(viridis)
 
 # load simulated data
 load("data_simulations.RData")
@@ -350,7 +357,7 @@ CDBMM_Gibbs_sa<-function(c,data_sample,n,ip_var_beta){
   ############################################
   
   # partition: cluster allocation
-  #partition=estimation_partition(cluster_allocation_0,cluster_allocation_1)
+  partition=estimation_partition(cluster_allocation_0,cluster_allocation_1)
   # posterior mean of tau=Y(1)-Y(0)
   #atoms=posterior_atoms(partition)
   Y0_imp_median=apply(Y0_imp,1,median)
@@ -368,7 +375,7 @@ CDBMM_Gibbs_sa<-function(c,data_sample,n,ip_var_beta){
     #post_eta=post_eta,  
     #post_var=post_var,
     #post_beta=post_beta,
-    #partition=partition,
+    partition=partition,
     #atoms=atoms,
     tau=tau,tau_=tau_))
 }
@@ -388,13 +395,136 @@ L_1=12
 
 ip_var_beta=c(1,10,100)
 
-SA_s1_1=lapply(1:50, function(i) CDBMM_Gibbs_sa(c=i, data_sample=scenario_1, n=n, ip_var_beta=ip_var_beta[1]))
-SA_s1_10=CDBMM_scenario_1
-SA_s1_100=lapply(1:50, function(i) CDBMM_Gibbs_sa(c=i, data_sample=scenario_1, n=n, ip_var_beta=ip_var_beta[3]))
+# scenario 1
+SA_s1_1=lapply(1:samples, function(i) CDBMM_Gibbs_sa(c=i, data_sample=scenario_1, n=n, ip_var_beta=ip_var_beta[1]))
+SA_s1_10=lapply(1:samples, function(i) CDBMM_Gibbs_sa(c=i, data_sample=scenario_1, n=n, ip_var_beta=ip_var_beta[2]))
+SA_s1_100=lapply(1:samples, function(i) CDBMM_Gibbs_sa(c=i, data_sample=scenario_1, n=n, ip_var_beta=ip_var_beta[3]))
 
-start.time <- Sys.time()
-SA_s1_1=lapply(1:5, function(i) CDBMM_Gibbs_sa(c=i, data_sample=scenario_1, n=n, ip_var_beta=ip_var_beta[1]))
-end.time <- Sys.time()
-time.taken <- end.time - start.time
-time.taken              
+# scenario 4
+SA_s4_1=lapply(1:samples, function(i) CDBMM_Gibbs_sa(c=i, data_sample=scenario_4, n=n, ip_var_beta=ip_var_beta[1]))
+SA_s4_10=lapply(1:samples, function(i) CDBMM_Gibbs_sa(c=i, data_sample=scenario_4, n=n, ip_var_beta=ip_var_beta[2]))
+SA_s4_100=lapply(1:samples, function(i) CDBMM_Gibbs_sa(c=i, data_sample=scenario_4, n=n, ip_var_beta=ip_var_beta[3]))
 
+#########################################################################
+
+# ---- bias and MSE ----
+
+# simulated individual treatment effect (ITE)
+simulated_tau_1=sapply(1:samples, function(s) scenario_1[[s]]$data$Y[2,]-scenario_1[[s]]$data$Y[1,])
+simulated_tau_4=sapply(1:samples, function(s) scenario_4[[s]]$data$Y[2,]-scenario_4[[s]]$data$Y[1,])
+
+# bias
+bias_1_var1=apply(sapply(1:samples, function(s) SA_s1_1[[s]]$tau-simulated_tau_1[,s]),2,mean)
+bias_1_var10=apply(sapply(1:samples, function(s) SA_s1_10[[s]]$tau-simulated_tau_1[,s]),2,mean)
+bias_1_var100=apply(sapply(1:samples, function(s) SA_s1_100[[s]]$tau-simulated_tau_1[,s]),2,mean)
+
+bias_4_var1=apply(sapply(1:samples, function(s) SA_s4_1[[s]]$tau-simulated_tau_4[,s]),2,mean)
+bias_4_var10=apply(sapply(1:samples, function(s) SA_s4_10[[s]]$tau-simulated_tau_4[,s]),2,mean)
+bias_4_var100=apply(sapply(1:samples, function(s) SA_s4_100[[s]]$tau-simulated_tau_4[,s]),2,mean)
+
+# mse
+mse_1_var1=apply(sapply(1:samples, function(s) (SA_s1_1[[s]]$tau-simulated_tau_1[,s])^2),2,mean)
+mse_1_var10=apply(sapply(1:samples, function(s) (SA_s1_10[[s]]$tau-simulated_tau_1[,s])^2),2,mean)
+mse_1_var100=apply(sapply(1:samples, function(s) (SA_s1_100[[s]]$tau-simulated_tau_1[,s])^2),2,mean)
+
+mse_4_var1=apply(sapply(1:samples, function(s) (SA_s4_1[[s]]$tau-simulated_tau_4[,s])^2),2,mean)
+mse_4_var10=apply(sapply(1:samples, function(s) (SA_s4_10[[s]]$tau-simulated_tau_4[,s])^2),2,mean)
+mse_4_var100=apply(sapply(1:samples, function(s) (SA_s4_100[[s]]$tau-simulated_tau_4[,s])^2),2,mean)
+
+# adjasted RAND index 
+rand_1_var1=sapply(1:samples, function(s) arandi(SA_s1_1[[s]]$S_cluster,
+                                                 SA_s1_1[[s]]$partitio[,1]*(SA_s1_1[[s]]$partitio[,2]+L_0)))
+rand_1_var10=sapply(1:samples, function(s) arandi(SA_s1_10[[s]]$S_cluster,
+                                                  SA_s1_10[[s]]$partitio[,1]*(SA_s1_10[[s]]$partitio[,2]+L_0)))
+rand_1_var100=sapply(1:samples, function(s) arandi(SA_s1_100[[s]]$S_cluster,
+                                                   SA_s1_100[[s]]$partitio[,1]*(SA_s1_100[[s]]$partitio[,2]+L_0)))
+
+rand_4_var1=sapply(1:samples, function(s) arandi(SA_s4_1[[s]]$S_cluster,
+                                                 SA_s4_1[[s]]$partitio[,1]*(SA_s4_1[[s]]$partitio[,2]+L_0)))
+rand_4_var10=sapply(1:samples, function(s) arandi(SA_s4_10[[s]]$S_cluster,
+                                                  SA_s4_10[[s]]$partitio[,1]*(SA_s4_10[[s]]$partitio[,2]+L_0)))
+rand_4_var100=sapply(1:samples, function(s) arandi(SA_s4_100[[s]]$S_cluster,
+                                                   SA_s4_100[[s]]$partitio[,1]*(SA_s4_100[[s]]$partitio[,2]+L_0)))
+
+
+#####################################################################################
+
+cbPalette <- c("#FF1100", "#FF8000", "#FFD50D")
+
+bias_boxplot=as.data.frame(cbind(Xi=c(bias_1_var1,bias_1_var10,bias_1_var100,
+                                      bias_4_var1,bias_4_var10,bias_4_var100),
+                                 Q=(rep(c(rep("var=1",samples),rep("var=10",samples),
+                                          rep("var=100",samples)),2)),
+                                 cov=paste0("scenario ",rep(c(1,4),each=samples*3))))
+bias_boxplot$cov=as.character(bias_boxplot$cov)
+bias_boxplot$Q=as.character(bias_boxplot$Q)
+bias_boxplot$Xi=as.numeric(bias_boxplot$Xi)
+
+pdf(file="bias_sa.pdf",width=10, height=5)
+ggplot(bias_boxplot, aes(x=cov, y=Xi, fill=Q)) + 
+  scale_fill_manual(values=cbPalette, name="")+
+  geom_boxplot(lwd=0.3,fatten = 1.5, outlier.size = 0.3)+
+  #geom_hline(yintercept = 0, col="#D90224", size=0.4) +
+  theme(panel.background = element_rect(fill='white'),
+        plot.background = element_rect(fill ="white"),
+        #panel.grid.minor = element_line(color = "grey"),
+        axis.title = element_text(size=14),
+        legend.text=element_text(size=10),
+        plot.title = element_text(hjust = 0.2),
+        title =element_text(size=18),
+        legend.background = element_rect(fill='transparent'),
+        panel.grid.major = element_line(color = "grey",size = 0.1))+
+  ylab("Bias") +
+  xlab("")
+dev.off()
+
+
+mse_boxplot=as.data.frame(cbind(Xi=c(mse_1_var1,mse_1_var10,mse_1_var100,
+                                      mse_4_var1,mse_4_var10,mse_4_var100),
+                                 Q=(rep(c(rep("var=1",samples),rep("var=10",samples),
+                                          rep("var=100",samples)),2)),
+                                 cov=paste0("scenario ",rep(c(1,4),each=samples*3))))
+mse_boxplot$cov=as.character(mse_boxplot$cov)
+mse_boxplot$Q=as.character(mse_boxplot$Q)
+mse_boxplot$Xi=as.numeric(mse_boxplot$Xi)
+
+pdf(file="mse_sa.pdf",width=10, height=5)
+ggplot(mse_boxplot, aes(x=cov, y=Xi, fill=Q)) + 
+  scale_fill_manual(values=cbPalette, name="")+
+  geom_boxplot(lwd=0.3,fatten = 1.5, outlier.size = 0.3)+
+  #geom_hline(yintercept = 0, col="#D90224", size=0.4) +
+  theme(panel.background = element_rect(fill='white'),
+        plot.background = element_rect(fill ="white"),
+        #panel.grid.minor = element_line(color = "grey"),
+        axis.title = element_text(size=14),
+        legend.text=element_text(size=10),
+        plot.title = element_text(hjust = 0.2),
+        title =element_text(size=18),
+        legend.background = element_rect(fill='transparent'),
+        panel.grid.major = element_line(color = "grey",size = 0.1))+
+  ylab("MSE") +
+  xlab("")
+dev.off()
+
+########################################################################
+
+#table rand index
+rand_index<-cbind(matrix(apply(cbind(rand_1_var1,rand_4_var1),2,mean)),
+                  matrix(apply(cbind(rand_1_var10,rand_4_var10),2,sd)),
+                  matrix(apply(cbind(rand_1_var100,rand_4_var100),2,mean)))
+
+row.names(rand_index)<-paste0("scenario ",c(1,4))
+colnames(rand_index)<-rep(c("mean","sd"),2)
+
+
+###########################################################################
+
+par(mfrow=c(1,3))
+boxplot(bias_1_var1, ylim=c(-0.1,0.15))
+boxplot(bias_1_var10, ylim=c(-0.1,0.15))
+boxplot(bias_1_var100, ylim=c(-0.1,0.15))
+
+par(mfrow=c(1,3))
+boxplot(mse_1_var1, ylim=c(0.3,2))
+boxplot(mse_1_var10, ylim=c(0.3,2))
+boxplot(mse_1_var100, ylim=c(0.3,2))
