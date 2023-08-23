@@ -593,7 +593,7 @@ ggplot(mse_boxplot, aes(x=cov, y=Xi, fill=Q)) +
         panel.grid.major = element_line(color = "grey",size = 0.1))+
   ylab("MSE") +
   xlab("") +
-  coord_cartesian(ylim = c(0.25, 0.9))
+  coord_cartesian(ylim = c(0.25, 1.3))
 dev.off()
 
 ########################################################################
@@ -621,4 +621,5 @@ colnames(rand_index_sd)<-c("1","10","100")
 xtable(rand_index_mean, digits=3)
 xtable(rand_index_mean, digits=3)
 
-
+round(rand_index_mean,4)
+round(rand_index_sd,4)
