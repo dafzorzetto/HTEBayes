@@ -54,7 +54,7 @@ CDBMM_Gibbs_sa<-function(c,data_sample,n,ip_var_beta){
   # ------   hyperparameters   -----
   p_beta=c(0,ip_var_beta)       # mean and variance of normal distribution for beta param.
   p_sigma=c(5,1)                # shape parameters of inv-gamma for sigma param.
-  p_eta=c(0,2)                  # mean and variance of normal distribution for eta param.
+  p_eta=c(0,20)                  # mean and variance of normal distribution for eta param.
   
   # ------   initialitation   -----
   # parameters
@@ -393,35 +393,35 @@ R_burnin=2000
 L_0=12
 L_1=12
 
-ip_var_beta=c(1,10,100)
+ip_var_beta=c(1,20,100)
 
 # scenario 1
 SA_s1_1=mclapply(1:samples, CDBMM_Gibbs_sa, data_sample=scenario_1, n=n, ip_var_beta=ip_var_beta[1], mc.cores = 6)
-SA_s1_10=mclapply(1:samples, CDBMM_Gibbs_sa, data_sample=scenario_1, n=n, ip_var_beta=ip_var_beta[2], mc.cores = 6)
+SA_s1_20=mclapply(1:samples, CDBMM_Gibbs_sa, data_sample=scenario_1, n=n, ip_var_beta=ip_var_beta[2], mc.cores = 6)
 SA_s1_100=mclapply(1:samples, CDBMM_Gibbs_sa, data_sample=scenario_1, n=n, ip_var_beta=ip_var_beta[3], mc.cores = 6)
 # scenario 2
 SA_s2_1=mclapply(1:samples, CDBMM_Gibbs_sa, data_sample=scenario_2, n=n, ip_var_beta=ip_var_beta[1], mc.cores = 6)
-SA_s2_10=mclapply(1:samples, CDBMM_Gibbs_sa, data_sample=scenario_2, n=n, ip_var_beta=ip_var_beta[2], mc.cores = 6)
+SA_s2_20=mclapply(1:samples, CDBMM_Gibbs_sa, data_sample=scenario_2, n=n, ip_var_beta=ip_var_beta[2], mc.cores = 6)
 SA_s2_100=mclapply(1:samples, CDBMM_Gibbs_sa, data_sample=scenario_2, n=n, ip_var_beta=ip_var_beta[3], mc.cores = 6)
 # scenario 3
 SA_s3_1=mclapply(1:samples, CDBMM_Gibbs_sa, data_sample=scenario_3, n=n, ip_var_beta=ip_var_beta[1], mc.cores = 6)
-SA_s3_10=mclapply(1:samples, CDBMM_Gibbs_sa, data_sample=scenario_3, n=n, ip_var_beta=ip_var_beta[2], mc.cores = 6)
+SA_s3_20=mclapply(1:samples, CDBMM_Gibbs_sa, data_sample=scenario_3, n=n, ip_var_beta=ip_var_beta[2], mc.cores = 6)
 SA_s3_100=mclapply(1:samples, CDBMM_Gibbs_sa, data_sample=scenario_3, n=n, ip_var_beta=ip_var_beta[3], mc.cores = 6)
 # scenario 4
 SA_s4_1=mclapply(1:samples, CDBMM_Gibbs_sa, data_sample=scenario_4, n=n, ip_var_beta=ip_var_beta[1], mc.cores = 6)
-SA_s4_10=mclapply(1:samples, CDBMM_Gibbs_sa, data_sample=scenario_4, n=n, ip_var_beta=ip_var_beta[2], mc.cores = 6)
+SA_s4_20=mclapply(1:samples, CDBMM_Gibbs_sa, data_sample=scenario_4, n=n, ip_var_beta=ip_var_beta[2], mc.cores = 6)
 SA_s4_100=mclapply(1:samples, CDBMM_Gibbs_sa, data_sample=scenario_4, n=n, ip_var_beta=ip_var_beta[3], mc.cores = 6)
 # scenario 5
 SA_s5_1=mclapply(1:samples, CDBMM_Gibbs_sa, data_sample=scenario_5, n=n, ip_var_beta=ip_var_beta[1], mc.cores = 6)
-SA_s5_10=mclapply(1:samples, CDBMM_Gibbs_sa, data_sample=scenario_5, n=n, ip_var_beta=ip_var_beta[2], mc.cores = 6)
+SA_s5_20=mclapply(1:samples, CDBMM_Gibbs_sa, data_sample=scenario_5, n=n, ip_var_beta=ip_var_beta[2], mc.cores = 6)
 SA_s5_100=mclapply(1:samples, CDBMM_Gibbs_sa, data_sample=scenario_5, n=n, ip_var_beta=ip_var_beta[3], mc.cores = 6)
 # scenario 6
 SA_s6_1=mclapply(1:samples, CDBMM_Gibbs_sa, data_sample=scenario_6, n=n, ip_var_beta=ip_var_beta[1], mc.cores = 6)
-SA_s6_10=mclapply(1:samples, CDBMM_Gibbs_sa, data_sample=scenario_6, n=n, ip_var_beta=ip_var_beta[2], mc.cores = 6)
+SA_s6_20=mclapply(1:samples, CDBMM_Gibbs_sa, data_sample=scenario_6, n=n, ip_var_beta=ip_var_beta[2], mc.cores = 6)
 SA_s6_100=mclapply(1:samples, CDBMM_Gibbs_sa, data_sample=scenario_6, n=n, ip_var_beta=ip_var_beta[3], mc.cores = 6)
 # scenario 7
 SA_s7_1=mclapply(1:samples, CDBMM_Gibbs_sa, data_sample=scenario_7, n=n, ip_var_beta=ip_var_beta[1], mc.cores = 6)
-SA_s7_10=mclapply(1:samples, CDBMM_Gibbs_sa, data_sample=scenario_7, n=n, ip_var_beta=ip_var_beta[2], mc.cores = 6)
+SA_s7_20=mclapply(1:samples, CDBMM_Gibbs_sa, data_sample=scenario_7, n=n, ip_var_beta=ip_var_beta[2], mc.cores = 6)
 SA_s7_100=mclapply(1:samples, CDBMM_Gibbs_sa, data_sample=scenario_7, n=n, ip_var_beta=ip_var_beta[3], mc.cores = 6)
 
 #########################################################################
@@ -439,90 +439,90 @@ simulated_tau_7=sapply(1:samples, function(s) scenario_7[[s]]$data$Y[2,]-scenari
 
 # bias
 bias_1_var1=apply(sapply(1:samples, function(s) SA_s1_1[[s]]$tau-simulated_tau_1[,s]),2,mean)
-bias_1_var10=apply(sapply(1:samples, function(s) SA_s1_10[[s]]$tau-simulated_tau_1[,s]),2,mean)
+bias_1_var20=apply(sapply(1:samples, function(s) SA_s1_20[[s]]$tau-simulated_tau_1[,s]),2,mean)
 bias_1_var100=apply(sapply(1:samples, function(s) SA_s1_100[[s]]$tau-simulated_tau_1[,s]),2,mean)
 
 bias_2_var1=apply(sapply(1:samples, function(s) SA_s2_1[[s]]$tau-simulated_tau_2[,s]),2,mean)
-bias_2_var10=apply(sapply(1:samples, function(s) SA_s2_10[[s]]$tau-simulated_tau_2[,s]),2,mean)
+bias_2_var20=apply(sapply(1:samples, function(s) SA_s2_20[[s]]$tau-simulated_tau_2[,s]),2,mean)
 bias_2_var100=apply(sapply(1:samples, function(s) SA_s2_100[[s]]$tau-simulated_tau_2[,s]),2,mean)
 
 bias_3_var1=apply(sapply(1:samples, function(s) SA_s3_1[[s]]$tau-simulated_tau_3[,s]),2,mean)
-bias_3_var10=apply(sapply(1:samples, function(s) SA_s3_10[[s]]$tau-simulated_tau_3[,s]),2,mean)
+bias_3_var20=apply(sapply(1:samples, function(s) SA_s3_20[[s]]$tau-simulated_tau_3[,s]),2,mean)
 bias_3_var100=apply(sapply(1:samples, function(s) SA_s3_100[[s]]$tau-simulated_tau_3[,s]),2,mean)
 
 bias_4_var1=apply(sapply(1:samples, function(s) SA_s4_1[[s]]$tau-simulated_tau_4[,s]),2,mean)
-bias_4_var10=apply(sapply(1:samples, function(s) SA_s4_10[[s]]$tau-simulated_tau_4[,s]),2,mean)
+bias_4_var20=apply(sapply(1:samples, function(s) SA_s4_20[[s]]$tau-simulated_tau_4[,s]),2,mean)
 bias_4_var100=apply(sapply(1:samples, function(s) SA_s4_100[[s]]$tau-simulated_tau_4[,s]),2,mean)
 
 bias_5_var1=apply(sapply(1:samples, function(s) SA_s5_1[[s]]$tau-simulated_tau_5[,s]),2,mean)
-bias_5_var10=apply(sapply(1:samples, function(s) SA_s5_10[[s]]$tau-simulated_tau_5[,s]),2,mean)
+bias_5_var20=apply(sapply(1:samples, function(s) SA_s5_20[[s]]$tau-simulated_tau_5[,s]),2,mean)
 bias_5_var100=apply(sapply(1:samples, function(s) SA_s5_100[[s]]$tau-simulated_tau_5[,s]),2,mean)
 
 bias_6_var1=apply(sapply(1:samples, function(s) SA_s6_1[[s]]$tau-simulated_tau_6[,s]),2,mean)
-bias_6_var10=apply(sapply(1:samples, function(s) SA_s6_10[[s]]$tau-simulated_tau_6[,s]),2,mean)
+bias_6_var20=apply(sapply(1:samples, function(s) SA_s6_20[[s]]$tau-simulated_tau_6[,s]),2,mean)
 bias_6_var100=apply(sapply(1:samples, function(s) SA_s6_100[[s]]$tau-simulated_tau_6[,s]),2,mean)
 
 bias_7_var1=apply(sapply(1:samples, function(s) SA_s7_1[[s]]$tau-simulated_tau_7[,s]),2,mean)
-bias_7_var10=apply(sapply(1:samples, function(s) SA_s7_10[[s]]$tau-simulated_tau_7[,s]),2,mean)
+bias_7_var20=apply(sapply(1:samples, function(s) SA_s7_20[[s]]$tau-simulated_tau_7[,s]),2,mean)
 bias_7_var100=apply(sapply(1:samples, function(s) SA_s7_100[[s]]$tau-simulated_tau_7[,s]),2,mean)
 
 # mse
 mse_1_var1=apply(sapply(1:samples, function(s) (SA_s1_1[[s]]$tau-simulated_tau_1[,s])^2),2,mean)
-mse_1_var10=apply(sapply(1:samples, function(s) (SA_s1_10[[s]]$tau-simulated_tau_1[,s])^2),2,mean)
+mse_1_var20=apply(sapply(1:samples, function(s) (SA_s1_20[[s]]$tau-simulated_tau_1[,s])^2),2,mean)
 mse_1_var100=apply(sapply(1:samples, function(s) (SA_s1_100[[s]]$tau-simulated_tau_1[,s])^2),2,mean)
 
 mse_2_var1=apply(sapply(1:samples, function(s) (SA_s2_1[[s]]$tau-simulated_tau_2[,s])^2),2,mean)
-mse_2_var10=apply(sapply(1:samples, function(s) (SA_s2_10[[s]]$tau-simulated_tau_2[,s])^2),2,mean)
+mse_2_var20=apply(sapply(1:samples, function(s) (SA_s2_20[[s]]$tau-simulated_tau_2[,s])^2),2,mean)
 mse_2_var100=apply(sapply(1:samples, function(s) (SA_s2_100[[s]]$tau-simulated_tau_2[,s])^2),2,mean)
 
 mse_3_var1=apply(sapply(1:samples, function(s) (SA_s3_1[[s]]$tau-simulated_tau_3[,s])^2),2,mean)
-mse_3_var10=apply(sapply(1:samples, function(s) (SA_s3_10[[s]]$tau-simulated_tau_3[,s])^2),2,mean)
+mse_3_var20=apply(sapply(1:samples, function(s) (SA_s3_20[[s]]$tau-simulated_tau_3[,s])^2),2,mean)
 mse_3_var100=apply(sapply(1:samples, function(s) (SA_s3_100[[s]]$tau-simulated_tau_3[,s])^2),2,mean)
 
 mse_4_var1=apply(sapply(1:samples, function(s) (SA_s4_1[[s]]$tau-simulated_tau_4[,s])^2),2,mean)
-mse_4_var10=apply(sapply(1:samples, function(s) (SA_s4_10[[s]]$tau-simulated_tau_4[,s])^2),2,mean)
+mse_4_var20=apply(sapply(1:samples, function(s) (SA_s4_20[[s]]$tau-simulated_tau_4[,s])^2),2,mean)
 mse_4_var100=apply(sapply(1:samples, function(s) (SA_s4_100[[s]]$tau-simulated_tau_4[,s])^2),2,mean)
 
 mse_5_var1=apply(sapply(1:samples, function(s) (SA_s5_1[[s]]$tau-simulated_tau_5[,s])^2),2,mean)
-mse_5_var10=apply(sapply(1:samples, function(s) (SA_s5_10[[s]]$tau-simulated_tau_5[,s])^2),2,mean)
+mse_5_var20=apply(sapply(1:samples, function(s) (SA_s5_20[[s]]$tau-simulated_tau_5[,s])^2),2,mean)
 mse_5_var100=apply(sapply(1:samples, function(s) (SA_s5_100[[s]]$tau-simulated_tau_5[,s])^2),2,mean)
 
 mse_6_var1=apply(sapply(1:samples, function(s) (SA_s6_1[[s]]$tau-simulated_tau_6[,s])^2),2,mean)
-mse_6_var10=apply(sapply(1:samples, function(s) (SA_s6_10[[s]]$tau-simulated_tau_6[,s])^2),2,mean)
+mse_6_var20=apply(sapply(1:samples, function(s) (SA_s6_20[[s]]$tau-simulated_tau_6[,s])^2),2,mean)
 mse_6_var100=apply(sapply(1:samples, function(s) (SA_s6_100[[s]]$tau-simulated_tau_6[,s])^2),2,mean)
 
 mse_7_var1=apply(sapply(1:samples, function(s) (SA_s7_1[[s]]$tau-simulated_tau_7[,s])^2),2,mean)
-mse_7_var10=apply(sapply(1:samples, function(s) (SA_s7_10[[s]]$tau-simulated_tau_7[,s])^2),2,mean)
+mse_7_var20=apply(sapply(1:samples, function(s) (SA_s7_20[[s]]$tau-simulated_tau_7[,s])^2),2,mean)
 mse_7_var100=apply(sapply(1:samples, function(s) (SA_s7_100[[s]]$tau-simulated_tau_7[,s])^2),2,mean)
 
 
 # adjasted RAND index 
 rand_1_var1=sapply(1:samples, function(s) arandi(scenario_1[[s]]$S_cluster,SA_s1_1[[s]]$partition[,1]*(SA_s1_1[[s]]$partition[,2]+L_0)))
-rand_1_var10=sapply(1:samples, function(s) arandi(scenario_1[[s]]$S_cluster,SA_s1_10[[s]]$partition[,1]*(SA_s1_10[[s]]$partition[,2]+L_0)))
+rand_1_var20=sapply(1:samples, function(s) arandi(scenario_1[[s]]$S_cluster,SA_s1_20[[s]]$partition[,1]*(SA_s1_10[[s]]$partition[,2]+L_0)))
 rand_1_var100=sapply(1:samples, function(s) arandi(scenario_1[[s]]$S_cluster,SA_s1_100[[s]]$partition[,1]*(SA_s1_100[[s]]$partition[,2]+L_0)))
 
 rand_2_var1=sapply(1:samples, function(s) arandi(scenario_2[[s]]$S_cluster,SA_s2_1[[s]]$partition[,1]*(SA_s2_1[[s]]$partition[,2]+L_0)))
-rand_2_var10=sapply(1:samples, function(s) arandi(scenario_2[[s]]$S_cluster,SA_s2_10[[s]]$partition[,1]*(SA_s2_10[[s]]$partition[,2]+L_0)))
+rand_2_var20=sapply(1:samples, function(s) arandi(scenario_2[[s]]$S_cluster,SA_s2_20[[s]]$partition[,1]*(SA_s2_10[[s]]$partition[,2]+L_0)))
 rand_2_var100=sapply(1:samples, function(s) arandi(scenario_2[[s]]$S_cluster,SA_s2_100[[s]]$partition[,1]*(SA_s2_100[[s]]$partition[,2]+L_0)))
 
 rand_3_var1=sapply(1:samples, function(s) arandi(scenario_3[[s]]$S_cluster,SA_s2_1[[s]]$partition[,1]*(SA_s3_1[[s]]$partition[,2]+L_0)))
-rand_3_var10=sapply(1:samples, function(s) arandi(scenario_3[[s]]$S_cluster,SA_s2_10[[s]]$partition[,1]*(SA_s3_10[[s]]$partition[,2]+L_0)))
+rand_3_var20=sapply(1:samples, function(s) arandi(scenario_3[[s]]$S_cluster,SA_s2_20[[s]]$partition[,1]*(SA_s3_10[[s]]$partition[,2]+L_0)))
 rand_3_var100=sapply(1:samples, function(s) arandi(scenario_3[[s]]$S_cluster,SA_s2_100[[s]]$partition[,1]*(SA_s3_100[[s]]$partition[,2]+L_0)))
 
 rand_4_var1=sapply(1:samples, function(s) arandi(scenario_4[[s]]$S_cluster,SA_s4_1[[s]]$partitio[,1]*(SA_s4_1[[s]]$partitio[,2]+L_0)))
-rand_4_var10=sapply(1:samples, function(s) arandi(scenario_4[[s]]$S_cluster,SA_s4_10[[s]]$partitio[,1]*(SA_s4_10[[s]]$partitio[,2]+L_0)))
+rand_4_var20=sapply(1:samples, function(s) arandi(scenario_4[[s]]$S_cluster,SA_s4_20[[s]]$partitio[,1]*(SA_s4_10[[s]]$partitio[,2]+L_0)))
 rand_4_var100=sapply(1:samples, function(s) arandi(scenario_4[[s]]$S_cluster,SA_s4_100[[s]]$partitio[,1]*(SA_s4_100[[s]]$partitio[,2]+L_0)))
 
 rand_5_var1=sapply(1:samples, function(s) arandi(scenario_5[[s]]$S_cluster,SA_s5_1[[s]]$partition[,1]*(SA_s5_1[[s]]$partition[,2]+L_0)))
-rand_5_var10=sapply(1:samples, function(s) arandi(scenario_5[[s]]$S_cluster,SA_s5_10[[s]]$partition[,1]*(SA_s5_10[[s]]$partition[,2]+L_0)))
+rand_5_var20=sapply(1:samples, function(s) arandi(scenario_5[[s]]$S_cluster,SA_s5_20[[s]]$partition[,1]*(SA_s5_10[[s]]$partition[,2]+L_0)))
 rand_5_var100=sapply(1:samples, function(s) arandi(scenario_5[[s]]$S_cluster,SA_s5_100[[s]]$partition[,1]*(SA_s5_100[[s]]$partition[,2]+L_0)))
 
 rand_6_var1=sapply(1:samples, function(s) arandi(scenario_6[[s]]$S_cluster,SA_s6_1[[s]]$partition[,1]*(SA_s6_1[[s]]$partition[,2]+L_0)))
-rand_6_var10=sapply(1:samples, function(s) arandi(scenario_6[[s]]$S_cluster,SA_s6_10[[s]]$partition[,1]*(SA_s6_10[[s]]$partition[,2]+L_0)))
+rand_6_var20=sapply(1:samples, function(s) arandi(scenario_6[[s]]$S_cluster,SA_s6_20[[s]]$partition[,1]*(SA_s6_10[[s]]$partition[,2]+L_0)))
 rand_6_var100=sapply(1:samples, function(s) arandi(scenario_6[[s]]$S_cluster,SA_s6_100[[s]]$partition[,1]*(SA_s6_100[[s]]$partition[,2]+L_0)))
 
 rand_7_var1=sapply(1:samples, function(s) arandi(scenario_7[[s]]$S_cluster,SA_s7_1[[s]]$partition[,1]*(SA_s7_1[[s]]$partition[,2]+L_0)))
-rand_7_var10=sapply(1:samples, function(s) arandi(scenario_7[[s]]$S_cluster,SA_s7_10[[s]]$partition[,1]*(SA_s7_10[[s]]$partition[,2]+L_0)))
+rand_7_var20=sapply(1:samples, function(s) arandi(scenario_7[[s]]$S_cluster,SA_s7_20[[s]]$partition[,1]*(SA_s7_10[[s]]$partition[,2]+L_0)))
 rand_7_var100=sapply(1:samples, function(s) arandi(scenario_7[[s]]$S_cluster,SA_s7_100[[s]]$partition[,1]*(SA_s7_100[[s]]$partition[,2]+L_0)))
 
 
@@ -530,14 +530,14 @@ rand_7_var100=sapply(1:samples, function(s) arandi(scenario_7[[s]]$S_cluster,SA_
 
 cbPalette <- c("#FF1100", "#FF8000", "#FFD50D")
 
-bias_boxplot=as.data.frame(cbind(Xi=c(bias_1_var1,bias_1_var10,bias_1_var100,
-                                      bias_2_var1,bias_2_var10,bias_2_var100,
-                                      bias_3_var1,bias_3_var10,bias_3_var100,
-                                      bias_4_var1,bias_4_var10,bias_4_var100,
-                                      bias_5_var1,bias_5_var10,bias_5_var100,
-                                      bias_6_var1,bias_6_var10,bias_6_var100,
-                                      bias_7_var1,bias_7_var10,bias_7_var100),
-                                 Q=(rep(c(rep("1",samples),rep("10",samples),
+bias_boxplot=as.data.frame(cbind(Xi=c(bias_1_var1,bias_1_var20,bias_1_var100,
+                                      bias_2_var1,bias_2_var20,bias_2_var100,
+                                      bias_3_var1,bias_3_var20,bias_3_var100,
+                                      bias_4_var1,bias_4_var20,bias_4_var100,
+                                      bias_5_var1,bias_5_var20,bias_5_var100,
+                                      bias_6_var1,bias_6_var20,bias_6_var100,
+                                      bias_7_var1,bias_7_var20,bias_7_var100),
+                                 Q=(rep(c(rep("1",samples),rep("20",samples),
                                           rep("100",samples)),7)),
                                  cov=paste0("scenario ",rep(1:7,each=samples*3))))
 bias_boxplot$cov=as.character(bias_boxplot$cov)
@@ -563,14 +563,14 @@ ggplot(bias_boxplot, aes(x=cov, y=Xi, fill=Q)) +
 dev.off()
 
 
-mse_boxplot=as.data.frame(cbind(Xi=c(mse_1_var1,mse_1_var10,mse_1_var100,
-                                     mse_2_var1,mse_2_var10,mse_2_var100,
-                                     mse_3_var1,mse_3_var10,mse_3_var100,
-                                     mse_4_var1,mse_4_var10,mse_4_var100,
-                                     mse_5_var1,mse_5_var10,mse_5_var100,
-                                     mse_6_var1,mse_6_var10,mse_6_var100,
-                                     mse_7_var1,mse_7_var10,mse_7_var100),
-                                 Q=(rep(c(rep("1",samples),rep("10",samples),
+mse_boxplot=as.data.frame(cbind(Xi=c(mse_1_var1,mse_1_var20,mse_1_var100,
+                                     mse_2_var1,mse_2_var20,mse_2_var100,
+                                     mse_3_var1,mse_3_var20,mse_3_var100,
+                                     mse_4_var1,mse_4_var20,mse_4_var100,
+                                     mse_5_var1,mse_5_var20,mse_5_var100,
+                                     mse_6_var1,mse_6_var20,mse_6_var100,
+                                     mse_7_var1,mse_7_var20,mse_7_var100),
+                                 Q=(rep(c(rep("1",samples),rep("20",samples),
                                           rep("100",samples)),7)),
                                  cov=paste0("scenario ",rep(1:7,each=samples*3))))
 mse_boxplot$cov=as.character(mse_boxplot$cov)
@@ -601,22 +601,22 @@ dev.off()
 #table rand index
 rand_index_mean<-cbind(matrix(apply(cbind(rand_1_var1,rand_2_var1,rand_3_var1,rand_4_var1,
                                           rand_5_var1,rand_6_var1,rand_7_var1),2,mean)),
-                       matrix(apply(cbind(rand_1_var10,rand_2_var10,rand_3_var10,rand_4_var10,
-                                          rand_5_var10,rand_6_var10,rand_7_var10),2,mean)),
+                       matrix(apply(cbind(rand_1_var20,rand_2_var20,rand_3_var20,rand_4_var20,
+                                          rand_5_var20,rand_6_var20,rand_7_var20),2,mean)),
                        matrix(apply(cbind(rand_1_var100,rand_2_var100,rand_3_var100,rand_4_var100,
                                           rand_5_var100,rand_6_var100,rand_7_var100),2,mean)))
 
 rand_index_sd<-cbind(matrix(apply(cbind(rand_1_var1,rand_2_var1,rand_3_var1,rand_4_var1,
                                         rand_5_var1,rand_6_var1,rand_7_var1),2,sd)),
-                     matrix(apply(cbind(rand_1_var10,rand_2_var10,rand_3_var10,rand_4_var10,
-                                        rand_5_var10,rand_6_var10,rand_7_var10),2,sd)),
+                     matrix(apply(cbind(rand_1_var20,rand_2_var20,rand_3_var20,rand_4_var20,
+                                        rand_5_var20,rand_6_var20,rand_7_var20),2,sd)),
                      matrix(apply(cbind(rand_1_var100,rand_2_var100,rand_3_var100,rand_4_var100,
                                         rand_5_var100,rand_6_var100,rand_7_var100),2,sd)))
 
 row.names(rand_index_mean)<-paste0("scenario ",1:7)
-colnames(rand_index_mean)<-c("1","10","100")
+colnames(rand_index_mean)<-c("1","20","100")
 row.names(rand_index_sd)<-paste0("scenario ",1:7)
-colnames(rand_index_sd)<-c("1","10","100")
+colnames(rand_index_sd)<-c("1","20","100")
 
 xtable(rand_index_mean, digits=3)
 xtable(rand_index_mean, digits=3)
