@@ -41,7 +41,7 @@ CDBMM_Gibbs<-function(c,data_sample,n){
   Y_obs_0=Y_obs[T0]
   
   # ------   hyperparameters   -----
-  p_beta=c(0,10)                 # mean and variance of normal distribution for beta param.
+  p_beta=c(0,20)                 # mean and variance of normal distribution for beta param.
   p_sigma=c(5,1)                # shape parameters of inv-gamma for sigma param.
   p_eta=c(0,20)                  # mean and variance of normal distribution for eta param.
   
@@ -361,7 +361,7 @@ CDBMM_Gibbs<-function(c,data_sample,n){
   print(paste0("sample ",c, " done"))
   
   return(list(# remove the "#" if you want the chains of these parameters
-    post_eta=post_eta,  
+    #post_eta=post_eta,  
     #post_var=post_var,
     #post_beta=post_beta,
     partition=partition,
