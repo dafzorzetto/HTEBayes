@@ -77,8 +77,7 @@ ggplot(mse_boxplot, aes(x=cov, y=Xi, fill=Q)) +
         legend.background = element_rect(fill='transparent'),
         panel.grid.major = element_line(color = "grey",size = 0.1))+
   ylab("MSE") +
-  xlab("") +
-  coord_cartesian(ylim = c(0.25, 1.2))
+  xlab("") 
 dev.off()
 
 
@@ -91,7 +90,7 @@ rand_index<-cbind(matrix(apply(cbind(rand_CDBMM_1,rand_CDBMM_2,rand_CDBMM_3,rand
                   matrix(apply(cbind(rand_CDBMM_1,rand_CDBMM_2,rand_CDBMM_3,rand_CDBMM_4,
                                      rand_CDBMM_5,rand_CDBMM_6,rand_CDBMM_7),
                                2,sd)),
-                  matrix(apply(cbind(rand_CDBMM_1,rand_CART_2,rand_CART_3,rand_CART_4,
+                  matrix(apply(cbind(rand_CART_1,rand_CART_2,rand_CART_3,rand_CART_4,
                                      rand_CART_5,rand_CART_6,rand_CART_7),
                                2,mean)),
                   matrix(apply(cbind(rand_CART_1,rand_CART_2,rand_CART_3,rand_CART_4,
