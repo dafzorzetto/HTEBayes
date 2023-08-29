@@ -273,6 +273,7 @@ CDBMM_Gibbs_sa<-function(c,data_sample,n,ip_var_beta){
     for (l in clusters_temp){
       val=which(xi_0>=l)
       z_tilde=unlist(sapply(val, function(i) Z_0[[i]][l]))
+      z_tilde[z_tilde==(-Inf)]=-100
       x_tilde=cbind(rep(1,length(val)),matrix(X[T0[val],],ncol=n_X-1))
       V=solve(diag(n_X)/p_beta[2]+t(x_tilde)%*%x_tilde)
       beta_0[(l*n_X-(n_X-1)):(l*n_X)]=rmvnorm(1,V%*%(1/p_beta[2]*(diag(n_X)%*%rep(p_beta[1],n_X))+t(x_tilde)%*%z_tilde),V)[,1:n_X]
@@ -295,6 +296,7 @@ CDBMM_Gibbs_sa<-function(c,data_sample,n,ip_var_beta){
     for (l in clusters_temp){
       val=which(xi_1>=l)
       z_tilde=unlist(sapply(val, function(i) Z_1[[i]][l]))
+      z_tilde[z_tilde==(-Inf)]=-100
       x_tilde=cbind(rep(1,length(val)),matrix(X[T1[val],],ncol=n_X-1))
       V=solve(diag(n_X)/p_beta[2]+t(x_tilde)%*%x_tilde)
       beta_1[(l*n_X-(n_X-1)):(l*n_X)]=rmvnorm(1,V%*%(1/p_beta[2]*(diag(n_X)%*%rep(p_beta[1],n_X))+t(x_tilde)%*%z_tilde),V)[,1:n_X]
@@ -498,33 +500,38 @@ mse_7_var100=apply(sapply(1:samples, function(s) (SA_s7_100[[s]]$tau-simulated_t
 
 # adjasted RAND index 
 rand_1_var1=sapply(1:samples, function(s) arandi(scenario_1[[s]]$S_cluster,SA_s1_1[[s]]$partition[,1]*(SA_s1_1[[s]]$partition[,2]+L_0)))
-rand_1_var20=sapply(1:samples, function(s) arandi(scenario_1[[s]]$S_cluster,SA_s1_20[[s]]$partition[,1]*(SA_s1_10[[s]]$partition[,2]+L_0)))
+rand_1_var20=sapply(1:samples, function(s) arandi(scenario_1[[s]]$S_cluster,SA_s1_20[[s]]$partition[,1]*(SA_s1_20[[s]]$partition[,2]+L_0)))
 rand_1_var100=sapply(1:samples, function(s) arandi(scenario_1[[s]]$S_cluster,SA_s1_100[[s]]$partition[,1]*(SA_s1_100[[s]]$partition[,2]+L_0)))
 
 rand_2_var1=sapply(1:samples, function(s) arandi(scenario_2[[s]]$S_cluster,SA_s2_1[[s]]$partition[,1]*(SA_s2_1[[s]]$partition[,2]+L_0)))
-rand_2_var20=sapply(1:samples, function(s) arandi(scenario_2[[s]]$S_cluster,SA_s2_20[[s]]$partition[,1]*(SA_s2_10[[s]]$partition[,2]+L_0)))
+rand_2_var20=sapply(1:samples, function(s) arandi(scenario_2[[s]]$S_cluster,SA_s2_20[[s]]$partition[,1]*(SA_s2_20[[s]]$partition[,2]+L_0)))
 rand_2_var100=sapply(1:samples, function(s) arandi(scenario_2[[s]]$S_cluster,SA_s2_100[[s]]$partition[,1]*(SA_s2_100[[s]]$partition[,2]+L_0)))
 
 rand_3_var1=sapply(1:samples, function(s) arandi(scenario_3[[s]]$S_cluster,SA_s2_1[[s]]$partition[,1]*(SA_s3_1[[s]]$partition[,2]+L_0)))
-rand_3_var20=sapply(1:samples, function(s) arandi(scenario_3[[s]]$S_cluster,SA_s2_20[[s]]$partition[,1]*(SA_s3_10[[s]]$partition[,2]+L_0)))
+rand_3_var20=sapply(1:samples, function(s) arandi(scenario_3[[s]]$S_cluster,SA_s2_20[[s]]$partition[,1]*(SA_s3_20[[s]]$partition[,2]+L_0)))
 rand_3_var100=sapply(1:samples, function(s) arandi(scenario_3[[s]]$S_cluster,SA_s2_100[[s]]$partition[,1]*(SA_s3_100[[s]]$partition[,2]+L_0)))
 
 rand_4_var1=sapply(1:samples, function(s) arandi(scenario_4[[s]]$S_cluster,SA_s4_1[[s]]$partitio[,1]*(SA_s4_1[[s]]$partitio[,2]+L_0)))
-rand_4_var20=sapply(1:samples, function(s) arandi(scenario_4[[s]]$S_cluster,SA_s4_20[[s]]$partitio[,1]*(SA_s4_10[[s]]$partitio[,2]+L_0)))
+rand_4_var20=sapply(1:samples, function(s) arandi(scenario_4[[s]]$S_cluster,SA_s4_20[[s]]$partitio[,1]*(SA_s4_20[[s]]$partitio[,2]+L_0)))
 rand_4_var100=sapply(1:samples, function(s) arandi(scenario_4[[s]]$S_cluster,SA_s4_100[[s]]$partitio[,1]*(SA_s4_100[[s]]$partitio[,2]+L_0)))
 
 rand_5_var1=sapply(1:samples, function(s) arandi(scenario_5[[s]]$S_cluster,SA_s5_1[[s]]$partition[,1]*(SA_s5_1[[s]]$partition[,2]+L_0)))
-rand_5_var20=sapply(1:samples, function(s) arandi(scenario_5[[s]]$S_cluster,SA_s5_20[[s]]$partition[,1]*(SA_s5_10[[s]]$partition[,2]+L_0)))
+rand_5_var20=sapply(1:samples, function(s) arandi(scenario_5[[s]]$S_cluster,SA_s5_20[[s]]$partition[,1]*(SA_s5_20[[s]]$partition[,2]+L_0)))
 rand_5_var100=sapply(1:samples, function(s) arandi(scenario_5[[s]]$S_cluster,SA_s5_100[[s]]$partition[,1]*(SA_s5_100[[s]]$partition[,2]+L_0)))
 
 rand_6_var1=sapply(1:samples, function(s) arandi(scenario_6[[s]]$S_cluster,SA_s6_1[[s]]$partition[,1]*(SA_s6_1[[s]]$partition[,2]+L_0)))
-rand_6_var20=sapply(1:samples, function(s) arandi(scenario_6[[s]]$S_cluster,SA_s6_20[[s]]$partition[,1]*(SA_s6_10[[s]]$partition[,2]+L_0)))
+rand_6_var20=sapply(1:samples, function(s) arandi(scenario_6[[s]]$S_cluster,SA_s6_20[[s]]$partition[,1]*(SA_s6_20[[s]]$partition[,2]+L_0)))
 rand_6_var100=sapply(1:samples, function(s) arandi(scenario_6[[s]]$S_cluster,SA_s6_100[[s]]$partition[,1]*(SA_s6_100[[s]]$partition[,2]+L_0)))
 
 rand_7_var1=sapply(1:samples, function(s) arandi(scenario_7[[s]]$S_cluster,SA_s7_1[[s]]$partition[,1]*(SA_s7_1[[s]]$partition[,2]+L_0)))
-rand_7_var20=sapply(1:samples, function(s) arandi(scenario_7[[s]]$S_cluster,SA_s7_20[[s]]$partition[,1]*(SA_s7_10[[s]]$partition[,2]+L_0)))
+rand_7_var20=sapply(1:samples, function(s) arandi(scenario_7[[s]]$S_cluster,SA_s7_20[[s]]$partition[,1]*(SA_s7_20[[s]]$partition[,2]+L_0)))
 rand_7_var100=sapply(1:samples, function(s) arandi(scenario_7[[s]]$S_cluster,SA_s7_100[[s]]$partition[,1]*(SA_s7_100[[s]]$partition[,2]+L_0)))
 
+# step to do because if there is only a group automaticly the function arandiput value 0
+# but the correct function assigns value 1
+rand_7_var1[rand_7_var1==0]=1
+rand_7_var20[rand_7_var20==0]=1
+rand_7_var100[rand_7_var100==0]=1
 
 #####################################################################################
 
@@ -542,6 +549,8 @@ bias_boxplot=as.data.frame(cbind(Xi=c(bias_1_var1,bias_1_var20,bias_1_var100,
                                  cov=paste0("scenario ",rep(1:7,each=samples*3))))
 bias_boxplot$cov=as.character(bias_boxplot$cov)
 bias_boxplot$Q=as.character(bias_boxplot$Q)
+bias_boxplot$Q=as.factor(bias_boxplot$Q)
+bias_boxplot$Q=factor(bias_boxplot$Q, levels=c("1","20","100"))
 bias_boxplot$Xi=as.numeric(bias_boxplot$Xi)
 
 pdf(file="bias_sa.pdf",width=8, height=5)
@@ -575,11 +584,13 @@ mse_boxplot=as.data.frame(cbind(Xi=c(mse_1_var1,mse_1_var20,mse_1_var100,
                                  cov=paste0("scenario ",rep(1:7,each=samples*3))))
 mse_boxplot$cov=as.character(mse_boxplot$cov)
 mse_boxplot$Q=as.character(mse_boxplot$Q)
+mse_boxplot$Q=as.factor(mse_boxplot$Q)
+mse_boxplot$Q=factor(mse_boxplot$Q, levels=c("1","20","100"))
 mse_boxplot$Xi=as.numeric(mse_boxplot$Xi)
 
 pdf(file="mse_sa.pdf",width=8, height=5)
 ggplot(mse_boxplot, aes(x=cov, y=Xi, fill=Q)) + 
-  scale_fill_manual(values=cbPalette, name=expression( sigma[beta]^2))+
+  scale_fill_manual(values=cbPalette, name=expression( sigma[beta]^2), breaks=c("1","20","100"))+
   geom_boxplot(lwd=0.3,fatten = 1.5, outlier.size = 0.3)+
   #geom_hline(yintercept = 0, col="#D90224", size=0.4) +
   theme(panel.background = element_rect(fill='white'),
@@ -592,8 +603,7 @@ ggplot(mse_boxplot, aes(x=cov, y=Xi, fill=Q)) +
         legend.background = element_rect(fill='transparent'),
         panel.grid.major = element_line(color = "grey",size = 0.1))+
   ylab("MSE") +
-  xlab("") +
-  coord_cartesian(ylim = c(0.25, 1.3))
+  xlab("") 
 dev.off()
 
 ########################################################################
@@ -619,7 +629,7 @@ row.names(rand_index_sd)<-paste0("scenario ",1:7)
 colnames(rand_index_sd)<-c("1","20","100")
 
 xtable(rand_index_mean, digits=3)
-xtable(rand_index_mean, digits=3)
+xtable(rand_index_sd, digits=3)
 
 round(rand_index_mean,4)
 round(rand_index_sd,4)
