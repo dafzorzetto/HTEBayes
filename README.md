@@ -14,7 +14,10 @@ Generate dataset
 # sample size
 n = 500
 
-dataset <- simulation_sample_3groups(seed=1,
+#set seed
+seed = 1
+
+dataset <- simulation_sample_3groups(seed=seed,
                                      eta_0=c(2,4,6),
                                      eta_1=c(0,3,6),
                                      sigma_0=rep(0.3,3),
@@ -33,13 +36,15 @@ L_0 = 20
 L_1 = 20
 
 cdbmm_results <- CDBMM_Gibbs(c=1,
-                             data_sample=dataset,
+                             data_sample=list(dataset),
                              n=n)
 ```
 
 Visualize ITEs
 ```R
-
+hist(cdbmm_results$tau,
+     nclass = 50,
+     main = "ITEs")
 ```
 
 Visualize the number of groups and respective GATE
