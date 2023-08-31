@@ -366,7 +366,9 @@ CDBMM_Gibbs<-function(c,data_sample,n){
     #post_beta=post_beta,
     partition=partition,
     atoms=atoms,
-    tau=tau,tau_=tau_))
+    tau=tau,
+    #tau_=tau_
+    ))
 }
 
 
