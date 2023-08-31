@@ -47,7 +47,11 @@ hist(cdbmm_results$tau,
      main = "ITEs")
 ```
 
-Visualize the number of groups and respective GATE
+Group allocation and GATEs for discovered groups
 ```R
+group_allocation<-paste0(cdbmm_results$partition[,1],"-",cdbmm_results$partition[,1])
 
+sapply(unique(group_allocation), function(g) 
+  cdbmm_results$atoms$p_1[as.integer(substr(g, 3, 3))]-
+    cdbmm_results$atoms$p_0[as.integer(substr(g, 1, 1))])
 ```
