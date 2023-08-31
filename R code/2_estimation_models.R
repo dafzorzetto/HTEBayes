@@ -10,8 +10,8 @@ library(parallel)
 load("data_simulations.RData")
 
 # load functions
-source("0_model_CDBMM.R")
-source("0_model_BART_BCF_CART.R")
+source("src/model_CDBMM.R")
+source("src/model_BART_BCF_CART.R")
 
 #########################################################################
 #    ---  Estimation for the simulated settings with CDBMM    ----

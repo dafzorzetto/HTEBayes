@@ -3,7 +3,7 @@
 #########################################################################
 
 # load functions
-source("0_functions_simulations.R")
+source("src/functions_simulations.R")
 
 #########################################################################
 # -----    generation data   -----
