@@ -29,3 +29,12 @@
  - **`4_visualizing_results.R`**:
 
    functions to visualize the results: bias and MSE
+
+### Supplementary materials (in supplementary materials folder):
+ - **`run_time.R`**:
+   
+    functions to compare the run times for the models (CDBMM, BART, BCF) for different sample sizes
+
+- **`sensitivity_analysis.R`**:
+   
+    functions for sensitivity analysis of hyperparameters for regression parameters in probit function in the weights of the mixtures
