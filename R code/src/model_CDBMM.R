@@ -1,3 +1,27 @@
+#' @title
+#' Model Confounder-Dependent Bayesian Mixture Model (CDBMM)
+#'
+#' @description
+#' Gibbs sampler for the CDBMM estimation
+#'
+#' @param c : seed 
+#' @param data_sample : list of data
+#' @param n : sample size
+#'
+#' @return
+#' A list composed by:
+#' - *partition* : point estimation of group partition
+#' - *atoms* : mean of the cluster for the treatment and control level
+#' - *tau* : vector of individual treatment effect (ITE)
+#'
+#' @import mvtnorm
+#' @import CholWishart
+#' @import parallel
+#' @import truncnorm
+#' @import invgamma
+#' @import BNPmix
+
+
 #########################################################################
 #        ---  ESTIMATING CDBMM    ----
 #########################################################################
