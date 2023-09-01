@@ -20,6 +20,9 @@
 
 load("data_simulations.RData")
 
+#libraries
+library(ggplot2)
+
 # ---- histogram for the outcomes ----
 
 hist_sim<-function(data,scenario_n){
