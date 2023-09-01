@@ -4,7 +4,7 @@
 
 load("data_simulations.RData")
 
-# histogram for the outcomes
+# ---- histogram for the outcomes ----
 
 hist_sim<-function(data,scenario_n){
   
@@ -41,22 +41,7 @@ hist_sim<-function(data,scenario_n){
   #dev.off()
 }
 
-hist_sim(data=scenario_1[[1]],
-         scenario_n=1)
-hist_sim(data=scenario_2[[1]],
-         scenario_n=2)
-hist_sim(data=scenario_3[[1]],
-         scenario_n=3)
-hist_sim(data=scenario_4[[1]],
-         scenario_n=4)
-hist_sim(data=scenario_5[[1]],
-         scenario_n=5)
-hist_sim(data=scenario_6[[1]],
-         scenario_n=6)
-hist_sim(data=scenario_7[[1]],
-         scenario_n=7)
-
-# histogram for the individual treatment effects
+# ---- histogram for the individual treatment effects ----
 
 hist_ITE_sim<-function(data,scenario_n){
   
@@ -87,18 +72,3 @@ hist_ITE_sim<-function(data,scenario_n){
   print(g)
   dev.off()
 }
-
-hist_ITE_sim(data=scenario_1[[1]],
-             scenario_n=1)
-hist_ITE_sim(data=scenario_2[[1]],
-         scenario_n=2)
-hist_ITE_sim(data=scenario_3[[1]],
-         scenario_n=3)
-hist_ITE_sim(data=scenario_4[[1]],
-         scenario_n=4)
-hist_ITE_sim(data=scenario_5[[1]],
-         scenario_n=5)
-hist_ITE_sim(data=scenario_6[[1]],
-         scenario_n=6)
-hist_ITE_sim(data=scenario_7[[1]],
-         scenario_n=7)
