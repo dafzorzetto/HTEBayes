@@ -1,4 +1,24 @@
+#' @title
+#' Estimation of BART, BCF, and BCF+CART combo
+#'
+#' @description
+#' 3 function for the estimation of BART, BCF, and BCF+CART combo, respectively
+#'
+#' @param c : seed 
+#' @param data_sample : list of data
+#' @param estimated_Y (only for CART function): vector of estimated outcomes
+#'
+#' @return
+#' For BART and BCF functions:
+#' - *tau* : vector of individual treatment effect (ITE)
 
+#'
+#' @import bartCause
+#' @import bcf
+#' @import rpart.plot
+#' @import rattle
+
+#########################################################################
 # libraries
 library(bartCause)
 library(bcf)
