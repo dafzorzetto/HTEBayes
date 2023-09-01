@@ -1,3 +1,27 @@
+#' @title
+#' Simulation settings
+#'
+#' @description
+#' functions to simulate data for 3 different settings:
+#' -  "simulation_sample_3groups" uses 2 covariates and creates 3 groups
+#' -  "simulation_sample_4groups" uses 2 covariates and creates 4 groups
+#' -  "simulation_sample_5cov" uses 5 covariates and creates 5 groups 
+#'
+#' @param seed : seed for the reproducibility
+#' @param eta_0 : parameters vector for the mean of the groups of outcome under control level
+#' @param eta_1 : parameters vector for the mean of the groups of outcome under treatment level
+#' @param sigma_0 : parameters vector for the variance of the groups of outcome under control level
+#' @param sigma_1 : parameters vector for the variance of the groups of outcome under treatment level
+#' @param n : sample size
+#'
+#' @return
+#' A list composed by:
+#' - "data" : list of simulated variables 
+#' - "parameters" : list of parameters used in the simulation
+#' - "S_cluster" : cluster allocation of the simulated units
+#'
+#' @import mvtnorm
+
 #########################################################################
 #        ---  SIMULATION FUNCTIONS    ----
 #########################################################################
