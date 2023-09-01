@@ -1,3 +1,19 @@
+#' @title
+#' Visualization simulated dataset
+#'
+#' @description
+#' Histograms for the simulated outcomes and for the simulated individual treatment effect (ITE)
+#'
+#' @param data : list of simulated variables and true parameters
+#' @param scenario_n : name of the considered scenario 
+#'
+#' @return
+#' pdf file with the histogram
+#'
+#' @load simulated dataset
+#' @import ggplot2
+
+
 ###################################################################################
 # ---     plots: histograms of outcome distributions     ---
 ###################################################################################
