@@ -11,7 +11,8 @@
 #' @return
 #' For BART and BCF functions:
 #' - *tau* : vector of individual treatment effect (ITE)
-
+#' For CART function:
+#' - *partition* : point estimation of group partition
 #'
 #' @import bartCause
 #' @import bcf
