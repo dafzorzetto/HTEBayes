@@ -1,6 +1,6 @@
 ## Code files:
 
-### General functions (in src folder):
+### General functions (in **`src`** folder):
  - **`functions_simulations.R`**:
    
     functions to simulate different settings
@@ -16,7 +16,7 @@
 
    functions to visualize the simulated data
 
-### Reproduce the results in the Simulation Study Section:
+### Reproduce the results in the Simulation Study Section (in **`simulation study`** folder):
  - **`1_generating_data_simulations.R`**:
 
    generate the seven different settings
@@ -30,7 +30,7 @@
 
    functions to visualize the results: bias and MSE
 
-### Supplementary materials (in supplementary materials folder):
+### Supplementary materials (in **`supplementary materials`** folder):
  - **`run_time.R`**:
    
     functions to compare the run times for the models (CDBMM, BART, BCF) for different sample sizes
