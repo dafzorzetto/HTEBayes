@@ -6,6 +6,9 @@
 # load data
 load("estimands.RData")
 
+#source
+source("src/visualization_GATEs.R")
+
 #libraries
 library(xtable)
 library(ggplot2)
@@ -101,3 +104,51 @@ row.names(rand_index)<-paste0("scenario ",1:7)
 colnames(rand_index)<-rep(c("mean","sd"),2)
 
 xtable(rand_index, digits=4)
+
+#########################################################################
+
+GATEs_1=sapply(1:samples,function(c) order_cluster(CDBMM_scenario_1[[c]]$partition,
+                                                   atoms=CDBMM_scenario_1[[c]]$atoms,
+                                                   n_groups=3))
+GATEs_2=sapply(1:samples,function(c) order_cluster(CDBMM_scenario_2[[c]]$partition,
+                                                   atoms=CDBMM_scenario_2[[c]]$atoms,
+                                                   n_groups=3))
+GATEs_3=sapply(1:samples,function(c) order_cluster(CDBMM_scenario_3[[c]]$partition,
+                                                   atoms=CDBMM_scenario_3[[c]]$atoms,
+                                                   n_groups=3))
+GATEs_4=sapply(1:samples,function(c) order_cluster(CDBMM_scenario_4[[c]]$partition,
+                                                   atoms=CDBMM_scenario_4[[c]]$atoms,
+                                                   n_groups=4))
+GATEs_5=sapply(1:samples,function(c) order_cluster(CDBMM_scenario_5[[c]]$partition,
+                                                   atoms=CDBMM_scenario_5[[c]]$atoms,
+                                                   n_groups=5))
+GATEs_6=sapply(1:samples,function(c) order_cluster(CDBMM_scenario_6[[c]]$partition,
+                                                   atoms=CDBMM_scenario_6[[c]]$atoms,
+                                                   n_groups=3))
+GATEs_7=sapply(1:samples,function(c) order_cluster(CDBMM_scenario_7[[c]]$partition,
+                                                   atoms=CDBMM_scenario_7[[c]]$atoms,
+                                                   n_groups=1))
+
+boxplots_gates(GATEs=GATEs_1, 
+              scenario_n=1, 
+              n_groups=3)
+boxplots_gates(GATEs=GATEs_2, 
+               scenario_n=2, 
+               n_groups=3)
+boxplots_gates(GATEs=GATEs_3, 
+               scenario_n=3, 
+               n_groups=3)
+boxplots_gates(GATEs=GATEs_4, 
+               scenario_n=4, 
+               n_groups=4)
+boxplots_gates(GATEs=GATEs_5, 
+               scenario_n=5, 
+               n_groups=5)
+boxplots_gates(GATEs=GATEs_6, 
+               scenario_n=6, 
+               n_groups=3)
+boxplots_gates(GATEs=GATEs_7, 
+               scenario_n=7, 
+               n_groups=1)
+
+

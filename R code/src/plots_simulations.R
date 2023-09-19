@@ -18,8 +18,6 @@
 # ---     plots: histograms of outcome distributions     ---
 ###################################################################################
 
-load("data_simulations.RData")
-
 #libraries
 library(ggplot2)
 

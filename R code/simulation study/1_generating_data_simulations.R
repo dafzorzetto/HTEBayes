@@ -4,6 +4,7 @@
 
 # load functions
 source("src/functions_simulations.R")
+source("src/plots_simulations.R")
 
 #########################################################################
 # -----    generation data   -----
