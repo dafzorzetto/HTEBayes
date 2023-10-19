@@ -16,6 +16,10 @@
 
    functions to visualize the simulated data
 
+ - **`visualization_GATEs.R`**:
+
+   function to visualize the estimated GATEs (boxplots in Supplementary Material)
+
 ### Reproduce the results in the Simulation Study Section (in **`simulation study`** folder):
  - **`1_generating_data_simulations.R`**:
 
