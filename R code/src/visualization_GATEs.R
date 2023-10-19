@@ -60,7 +60,8 @@ boxplots_gates<-function(GATEs, scenario_n, n_groups){
           legend.background = element_rect(fill='transparent'),
           panel.grid.major = element_line(color = "grey",size = 0.1))+
     ylab("GATEs") +
-    xlab("") 
+    xlab("")+
+    ggtitle(paste0("    Scenario ",scenario_n)) 
   
   pdf(file=paste0("GATEs_",scenario_n,".pdf"),width=7, height=5)
   print(g)
