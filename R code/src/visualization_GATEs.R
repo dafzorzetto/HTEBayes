@@ -42,7 +42,7 @@ library(ggplot2)
 
 cbPalette <- c("#F4C000", "#D45C0B", "#EB002F", "#7C0BD4", "#0C51F7")
 
-boxplots_gates<-function(GATEs, scenario_n, n_groups){
+boxplots_gates<-function(GATEs, scenario_n, n_groups, sim_par){
   
   boxplot_df=as.data.frame(cbind(Xi=c(GATEs),
                                  Q=(rep(1:n_groups,samples))))
@@ -51,6 +51,7 @@ boxplots_gates<-function(GATEs, scenario_n, n_groups){
   g<-ggplot(boxplot_df, aes(x=Q, y=Xi, fill=Q)) + 
     scale_fill_manual(values=cbPalette, name="groups")+
     geom_boxplot(lwd=0.3,fatten = 1.5, outlier.size = 0.3)+
+    geom_hline(yintercept = sim_par$eta_1-sim_par$eta_0, col="#00ace6", size=0.5, linetype = "dotdash") +
     theme(panel.background = element_rect(fill='white'),
           plot.background = element_rect(fill ="white"),
           axis.title = element_text(size=14),
