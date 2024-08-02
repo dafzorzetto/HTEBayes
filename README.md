@@ -84,3 +84,17 @@ sapply(unique(group_allocation), function(g)
   cdbmm_results$atoms$p_1[as.integer(substr(g, 3, 3))]-
     cdbmm_results$atoms$p_0[as.integer(substr(g, 1, 1))])
 ```
+
+## Cite
+
+```bibtex
+@article{zorzetto2024confounder,
+  title={Confounder-dependent Bayesian mixture model: Characterizing heterogeneity of causal effects in air pollution epidemiology},
+  author={Zorzetto, Dafne and Bargagli-Stoffi, Falco J and Canale, Antonio and Dominici, Francesca},
+  journal={Biometrics},
+  volume={80},
+  number={2},
+  year={2024},
+  publisher={Oxford University Press}
+}
+```
