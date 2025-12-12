@@ -38,7 +38,7 @@ library(BNPmix)
 #    ---  Confonder-Dependent Bayesian Mixture Model    ----
 #########################################################################
 
-CDBMM_Gibbs_general<-function(T_level, X, Y_obs){
+CDBMM_Gibbs_general<-function(T_level, X, Y_obs, type_partition="VI"){
   
   # set seed for riproducibility
   set.seed(111)
@@ -70,7 +70,7 @@ CDBMM_Gibbs_general<-function(T_level, X, Y_obs){
   # ------   hyperparameters   -----
   p_beta=c(0,20)                 # mean and variance of normal distribution for beta param.
   p_sigma=c(5,1)                # shape parameters of inv-gamma for sigma param.
-  p_eta=c(0,20)                  # mean and variance of normal distribution for eta param.
+  p_eta=c(mean(Y_obs),20)                  # mean and variance of normal distribution for eta param.
   
   # ------   initialitation   -----
   # parameters
@@ -107,15 +107,18 @@ CDBMM_Gibbs_general<-function(T_level, X, Y_obs){
   }
   
   # point estimate parition
-  estimation_partition<-function(xi_0,xi_1){
+  estimation_partition<-function(xi_0,xi_1, type="VI"){
     
-    # using Variation of Information as loss function
-    clusters_0=partition.BNPdens(list(clust=t(xi_0)),dist = "VI")$partitions[1,]
-    clusters_1=partition.BNPdens(list(clust=t(xi_1)),dist = "VI")$partitions[1,]
-    
-    # alternativly: Binder's loss
-    #clusters_0=partition.BNPdens(list(clust=t(xi_0)),dist = "Binder")$partitions
-    #clusters_1=partition.BNPdens(list(clust=t(xi_1)),dist = "Binder")$partitions
+    if (type=="VI"){
+      # using Variation of Information as loss function
+      clusters_0=partition.BNPdens(list(clust=t(xi_0)),dist = "VI")$partitions[1,]
+      clusters_1=partition.BNPdens(list(clust=t(xi_1)),dist = "VI")$partitions[1,]
+    }
+    if (type=="Binder"){
+      # alternativly: Binder's loss
+      clusters_0=partition.BNPdens(list(clust=t(xi_0)),dist = "Binder")$partitions[1,]
+      clusters_1=partition.BNPdens(list(clust=t(xi_1)),dist = "Binder")$partitions[1,]
+    }
     
     clusters=cbind(clusters_0,clusters_1)
     dimnames(clusters)=NULL
@@ -373,7 +376,7 @@ CDBMM_Gibbs_general<-function(T_level, X, Y_obs){
   ############################################
   
   # partition: cluster allocation
-  partition=estimation_partition(cluster_allocation_0,cluster_allocation_1)
+  partition=estimation_partition(cluster_allocation_0,cluster_allocation_1, type=type_partition)
   # posterior mean of tau=Y(1)-Y(0)
   atoms=posterior_atoms(partition)
   Y0_imp_median=apply(Y0_imp,1,median)
