@@ -38,7 +38,7 @@ library(BNPmix)
 #    ---  Confonder-Dependent Bayesian Mixture Model    ----
 #########################################################################
 
-CDBMM_Gibbs_general<-function(c,T_level, X, Y_obs){
+CDBMM_Gibbs_general<-function(T_level, X, Y_obs){
   
   # set seed for riproducibility
   set.seed(111)
@@ -385,15 +385,13 @@ CDBMM_Gibbs_general<-function(c,T_level, X, Y_obs){
   tau_[T1]=Y_obs[T1]-Y0_imp_median[T1]
   
   
-  print(paste0("sample ",c, " done"))
-  
   return(list(# remove the "#" if you want the chains of these parameters
     #post_eta=post_eta,  
     #post_var=post_var,
     #post_beta=post_beta,
     partition=partition,
     atoms=atoms,
-    tau=tau,
+    tau=tau
     #tau_=tau_
   ))
 }
