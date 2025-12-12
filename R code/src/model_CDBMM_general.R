@@ -78,8 +78,8 @@ CDBMM_Gibbs_general<-function(T_level, X, Y_obs, type_partition="VI"){
   sigma_1=rep(1,L_1)
   beta_0=rep(0,n_X*(L_0-1))
   beta_1=rep(0,n_X*(L_1-1))
-  eta_0=seq(-3,-3+0.5*(L_0-1),0.5)
-  eta_1=seq(-3,-3+0.5*(L_1-1),0.5)
+  eta_0=rnorm(L_0, p_eta[1], sd(Y_obs))
+  eta_1=rnorm(L_1, p_eta[1], sd(Y_obs))
   # cluster allocation variables
   xi_0=sample(1:L_0,n0,replace=TRUE)
   xi_1=sample(1:L_1,n1,replace=TRUE)
